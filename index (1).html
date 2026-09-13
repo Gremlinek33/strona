@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Zaproszenie na randkę 🌸</title>
+<meta name="description" content="Umów się ze mną na randkę – wybierz termin i plan wieczoru." />
+<meta name="theme-color" content="#ffeef5" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>" />
+<style>
+  :root{
+    --bg1:#fff8fb;
+    --bg2:#ffeef5;
+    --bg3:#fdf7f9;
+    --pink-50:#fff5f9;
+    --pink-100:#ffe6ef;
+    --pink-200:#ffd2e1;
+    --pink-300:#f9b3cb;
+    --pink-400:#f291b3;
+    --pink-500:#e56f98;
+    --pink-600:#c9537d;
+    --text:#4b3a42;
+    --muted:#9b8590;
+    --green-dark:#5e8a6c;
+    --shadow:0 18px 50px -12px rgba(226,133,168,.45);
+    --shadow-sm:0 6px 18px -8px rgba(226,133,168,.5);
+    --radius:28px;
+    --radius-sm:16px;
+  }
+
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
+  html{-webkit-text-size-adjust:100%;}
+
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    font-size:16px;
+    color:var(--text);
+    background:
+      radial-gradient(1100px 700px at 12% -5%, #ffffff 0%, rgba(255,255,255,0) 60%),
+      radial-gradient(900px 650px at 95% 8%, var(--pink-100) 0%, rgba(255,230,239,0) 65%),
+      linear-gradient(165deg, var(--bg1) 0%, var(--bg2) 45%, var(--bg3) 100%);
+    background-attachment:fixed;
+    /* uwaga: brak justify-content:center — inaczej wysoka karta jest ucinana */
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:24px 14px calc(34px + env(safe-area-inset-bottom));
+    overflow-x:hidden;
+  }
+
+  /* ---------- tło: płatki + bonsai ---------- */
+  #petals,#confetti{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+  }
+  #petals{z-index:0;}
+  #confetti{z-index:60;}
+
+  .bg-bonsai{
+    position:fixed;
+    bottom:-10px;
+    pointer-events:none;
+    z-index:0;
+    opacity:.28;
+  }
+  .bg-bonsai.left{left:-24px;width:230px;transform:scaleX(-1);}
+  .bg-bonsai.right{right:-30px;width:265px;}
+  @media (max-width:860px){
+    .bg-bonsai{opacity:.14;}
+    .bg-bonsai.left{width:132px;left:-38px;}
+    .bg-bonsai.right{width:146px;right:-42px;}
+  }
+
+  /* ---------- karta ---------- */
+  .card{
+    position:relative;
+    z-index:10;
+    width:100%;
+    max-width:620px;
+    margin:auto;               /* centrowanie bez ucinania */
+    background:linear-gradient(180deg,#ffffff 0%, var(--pink-50) 100%);
+    border:1px solid rgba(249,179,203,.45);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:32px 32px 28px;
+    animation:cardIn .7s cubic-bezier(.2,.8,.2,1) both;
+    overflow:hidden;
+  }
+  .card::before{
+    content:"";
+    position:absolute;
+    top:-90px;right:-90px;
+    width:220px;height:220px;
+    background:radial-gradient(circle at center,var(--pink-200),rgba(255,210,225,0));
+    opacity:.6;
+    pointer-events:none;
+  }
+  @keyframes cardIn{
+    from{opacity:0;transform:translateY(22px) scale(.98);}
+    to{opacity:1;transform:none;}
+  }
+
+  /* ---------- nagłówek ---------- */
+  header{text-align:center;}
+  .bonsai-badge{
+    width:88px;height:88px;
+    margin:0 auto 12px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 25%,#fff,var(--pink-100));
+    border:1px solid rgba(249,179,203,.55);
+    box-shadow:var(--shadow-sm);
+    display:flex;align-items:center;justify-content:center;
+    animation:sway 7s ease-in-out infinite;
+  }
+  .bonsai-badge svg{width:58px;height:58px;}
+  @keyframes sway{
+    0%,100%{transform:rotate(-2.5deg);}
+    50%{transform:rotate(2.5deg);}
+  }
+  h1{
+    margin:0;
+    font-size:clamp(1.45rem,5.4vw,2.05rem);
+    font-weight:700;
+    letter-spacing:-.4px;
+    line-height:1.25;
+    background:linear-gradient(95deg,var(--pink-600),var(--pink-400) 60%,var(--green-dark));
+    -webkit-background-clip:text;background-clip:text;
+    color:transparent;
+  }
+
+  /* ---------- progres ---------- */
+  .progress{
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+    gap:4px;
+    margin:24px 0 22px;
+  }
+  .p-step{display:flex;flex-direction:column;align-items:center;gap:7px;width:84px;}
+  .p-dot{
+    width:34px;height:34px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:#fff;
+    border:2px solid var(--pink-200);
+    color:var(--pink-300);
+    font-weight:700;font-size:.88rem;
+    transition:.35s ease;
+  }
+  .p-label{font-size:.74rem;color:var(--muted);text-align:center;transition:.3s;}
+  .p-step.active .p-dot{
+    background:linear-gradient(140deg,var(--pink-400),var(--pink-500));
+    border-color:transparent;color:#fff;
+    transform:scale(1.1);
+    box-shadow:0 8px 18px -6px rgba(229,111,152,.75);
+  }
+  .p-step.active .p-label{color:var(--pink-600);font-weight:600;}
+  .p-step.done .p-dot{background:var(--pink-100);border-color:var(--pink-300);color:var(--pink-600);}
+  .p-line{height:2px;flex:1;min-width:12px;margin-top:16px;background:var(--pink-200);border-radius:2px;}
+
+  /* ---------- kroki ---------- */
+  .step{display:none;animation:fadeIn .4s ease both;}
+  .step.active{display:block;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+
+  h2{
+    display:flex;align-items:center;gap:9px;
+    margin:0 0 18px;
+    font-size:1.14rem;
+    color:var(--pink-600);
+  }
+  h2 svg{width:22px;height:22px;flex:0 0 auto;}
+
+  label.field-label{
+    display:block;
+    font-size:.78rem;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.7px;
+    color:var(--pink-500);
+    margin:0 0 8px;
+  }
+
+  input[type="date"],input[type="time"],input[type="text"],textarea{
+    width:100%;
+    font:inherit;
+    font-size:1rem;
+    color:var(--text);
+    background:#fff;
+    border:1.5px solid var(--pink-200);
+    border-radius:var(--radius-sm);
+    padding:13px 15px;
+    min-height:50px;
+    appearance:none;
+    -webkit-appearance:none;
+    transition:border-color .2s, box-shadow .2s;
+    outline:none;
+  }
+  input[type="date"]:focus,input[type="time"]:focus,input[type="text"]:focus,textarea:focus{
+    border-color:var(--pink-400);
+    box-shadow:0 0 0 4px rgba(249,179,203,.3);
+  }
+  input[type="date"],input[type="time"]{display:block;}
+  textarea{resize:vertical;min-height:84px;}
+  ::placeholder{color:#cdb9c3;}
+
+  .time-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(74px,1fr));
+    gap:9px;
+    margin-bottom:16px;
+  }
+  .time-chip{
+    font:inherit;
+    font-size:.95rem;
+    cursor:pointer;
+    padding:13px 6px;
+    border-radius:14px;
+    border:1.5px solid var(--pink-200);
+    background:#fff;
+    color:var(--pink-600);
+    font-weight:600;
+    transition:.2s;
+  }
+  .time-chip.selected{
+    background:linear-gradient(140deg,var(--pink-400),var(--pink-500));
+    color:#fff;border-color:transparent;
+    box-shadow:0 8px 16px -8px rgba(229,111,152,.85);
+  }
+
+  .divider{
+    display:flex;align-items:center;gap:12px;
+    color:var(--muted);font-size:.76rem;
+    text-transform:uppercase;letter-spacing:.8px;
+    margin:20px 0 12px;
+  }
+  .divider::before,.divider::after{content:"";height:1px;flex:1;background:var(--pink-200);}
+
+  /* ---------- aktywności ---------- */
+  .activity{
+    background:#fff;
+    border:1.5px solid var(--pink-200);
+    border-radius:20px;
+    margin-bottom:11px;
+    overflow:hidden;
+    transition:.25s;
+  }
+  .activity.checked{
+    border-color:var(--pink-400);
+    box-shadow:0 10px 24px -14px rgba(229,111,152,.8);
+    background:linear-gradient(180deg,#fff,var(--pink-50));
+  }
+  .activity-head{
+    display:flex;align-items:center;gap:13px;
+    padding:16px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .activity-head .emo{font-size:1.35rem;line-height:1;}
+  .activity-head .name{flex:1;font-weight:600;font-size:1rem;}
+
+  .box{
+    width:24px;height:24px;flex:0 0 auto;
+    border-radius:8px;
+    border:2px solid var(--pink-300);
+    background:#fff;
+    position:relative;
+    transition:.22s;
+  }
+  .activity.checked .box{
+    background:linear-gradient(140deg,var(--pink-400),var(--pink-500));
+    border-color:transparent;
+  }
+  .box::after{
+    content:"";
+    position:absolute;left:7px;top:3px;
+    width:6px;height:11px;
+    border:solid #fff;border-width:0 2.5px 2.5px 0;
+    transform:rotate(45deg) scale(0);
+    transition:.2s;
+  }
+  .activity.checked .box::after{transform:rotate(45deg) scale(1);}
+
+  .sub{
+    display:none;
+    padding:14px 16px 16px;
+    border-top:1px dashed var(--pink-200);
+  }
+  .sub.open{display:block;animation:fadeIn .3s ease both;}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{
+    display:inline-flex;align-items:center;
+    padding:11px 15px;
+    border-radius:999px;
+    border:1.5px solid var(--pink-200);
+    background:var(--pink-50);
+    font-size:.92rem;
+    cursor:pointer;
+    transition:.2s;
+  }
+  .chip input{display:none;}
+  .chip.on{
+    background:linear-gradient(140deg,var(--pink-400),var(--pink-500));
+    color:#fff;border-color:transparent;
+    box-shadow:0 6px 14px -8px rgba(229,111,152,.9);
+  }
+
+  /* ---------- podsumowanie ---------- */
+  .summary{
+    background:#fff;
+    border:1.5px solid var(--pink-200);
+    border-radius:20px;
+    padding:4px 18px;
+    margin-bottom:18px;
+  }
+  .sum-row{
+    display:flex;gap:12px;
+    align-items:flex-start;
+    padding:14px 0;
+    border-bottom:1px dashed var(--pink-200);
+  }
+  .sum-row:last-child{border-bottom:none;}
+  .sum-row .ico{font-size:1.1rem;line-height:1.4;}
+  .sum-row .k{font-size:.7rem;text-transform:uppercase;letter-spacing:.7px;color:var(--pink-500);font-weight:700;}
+  .sum-row .v{margin-top:3px;font-size:.97rem;line-height:1.5;overflow-wrap:anywhere;}
+  .sum-row .v .tag{
+    display:inline-block;
+    background:var(--pink-100);
+    color:var(--pink-600);
+    border-radius:999px;
+    padding:3px 11px;
+    font-size:.83rem;
+    margin:3px 5px 0 0;
+    font-weight:600;
+  }
+
+  /* ---------- przyciski ---------- */
+  .actions{display:flex;gap:10px;margin-top:22px;}
+  .btn{
+    font:inherit;
+    font-size:1rem;
+    font-weight:700;
+    cursor:pointer;
+    border:none;
+    border-radius:999px;
+    padding:16px 22px;
+    min-height:54px;
+    transition:.25s;
+    flex:1;
+  }
+  .btn-primary{
+    color:#fff;
+    background:linear-gradient(120deg,var(--pink-400),var(--pink-500) 55%,var(--pink-600));
+    box-shadow:0 12px 26px -12px rgba(201,83,125,.9);
+  }
+  .btn-primary:active{transform:translateY(1px);}
+  .btn-primary:disabled{opacity:.65;cursor:not-allowed;}
+  .btn-ghost{
+    flex:0 0 auto;
+    background:#fff;
+    color:var(--pink-600);
+    border:1.5px solid var(--pink-200);
+    padding:16px 20px;
+  }
+
+  .alert{
+    display:none;
+    margin-top:14px;
+    padding:12px 15px;
+    border-radius:14px;
+    background:#fff2f5;
+    border:1.5px solid var(--pink-300);
+    color:var(--pink-600);
+    font-size:.88rem;
+  }
+  .alert.show{display:block;animation:shake .4s ease;}
+  @keyframes shake{
+    0%,100%{transform:translateX(0);}
+    25%{transform:translateX(-5px);}
+    75%{transform:translateX(5px);}
+  }
+
+  /* ---------- sukces ---------- */
+  .success{text-align:center;padding:6px 0 4px;}
+  .success .heart{
+    font-size:3.4rem;
+    animation:pop .7s cubic-bezier(.2,1.6,.4,1) both, beat 1.6s ease-in-out 1s infinite;
+  }
+  @keyframes pop{from{transform:scale(0) rotate(-25deg);opacity:0;}to{transform:none;opacity:1;}}
+  @keyframes beat{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
+  .success h2{justify-content:center;font-size:1.4rem;margin:10px 0 10px;}
+  .success .recap{
+    margin-top:18px;
+    background:#fff;
+    border:1.5px solid var(--pink-200);
+    border-radius:18px;
+    padding:16px;
+    font-size:.95rem;
+    line-height:1.65;
+    text-align:left;
+    overflow-wrap:anywhere;
+  }
+
+  /* ---------- telefon ---------- */
+  @media (max-width:560px){
+    body{padding:14px 10px calc(24px + env(safe-area-inset-bottom));}
+    .card{padding:22px 16px 20px;border-radius:22px;}
+    .bonsai-badge{width:72px;height:72px;margin-bottom:10px;}
+    .bonsai-badge svg{width:48px;height:48px;}
+    .progress{margin:20px 0 18px;gap:2px;}
+    .p-step{width:70px;}
+    .p-dot{width:32px;height:32px;font-size:.85rem;}
+    .p-label{font-size:.68rem;}
+    .p-line{margin-top:15px;min-width:8px;}
+    h2{font-size:1.06rem;margin-bottom:14px;}
+    .time-grid{grid-template-columns:repeat(4,1fr);gap:7px;}
+    .time-chip{padding:12px 2px;font-size:.88rem;border-radius:12px;}
+    .activity-head{padding:14px;gap:11px;}
+    .activity-head .name{font-size:.97rem;}
+    .summary{padding:2px 14px;}
+    .actions{flex-direction:row;gap:8px;}
+    .btn{padding:15px 14px;font-size:.97rem;min-height:52px;}
+    .btn-ghost{padding:15px 16px;}
+    #sendBtn{font-size:.94rem;}
+  }
+  @media (max-width:360px){
+    .time-grid{grid-template-columns:repeat(3,1fr);}
+    .p-step{width:60px;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="petals" aria-hidden="true"></canvas>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<svg class="bg-bonsai left" viewBox="0 0 200 220" aria-hidden="true">
+  <g fill="none" stroke="#8fb89a" stroke-width="5" stroke-linecap="round">
+    <path d="M100 200 C98 160 80 150 70 120 C62 96 78 78 96 74" />
+    <path d="M98 150 C110 142 130 138 142 122" />
+    <path d="M92 118 C78 112 66 100 62 88" />
+  </g>
+  <g fill="#a8cdb2">
+    <ellipse cx="100" cy="64" rx="42" ry="22"/>
+    <ellipse cx="150" cy="112" rx="30" ry="16"/>
+    <ellipse cx="54" cy="82" rx="26" ry="14"/>
+  </g>
+  <g fill="#f9b3cb">
+    <circle cx="82" cy="58" r="4"/><circle cx="116" cy="70" r="3.5"/>
+    <circle cx="152" cy="106" r="3.5"/><circle cx="48" cy="78" r="3"/>
+    <circle cx="128" cy="58" r="3"/>
+  </g>
+  <path d="M62 200 h76 l-12 20 h-52 z" fill="#f2c3d4"/>
+</svg>
+
+<svg class="bg-bonsai right" viewBox="0 0 200 220" aria-hidden="true">
+  <g fill="none" stroke="#8fb89a" stroke-width="5" stroke-linecap="round">
+    <path d="M100 200 C102 164 118 152 126 124 C132 100 116 82 100 78" />
+    <path d="M104 152 C92 144 72 140 60 126" />
+    <path d="M112 120 C126 114 138 102 142 90" />
+  </g>
+  <g fill="#a8cdb2">
+    <ellipse cx="100" cy="68" rx="44" ry="23"/>
+    <ellipse cx="52" cy="116" rx="30" ry="16"/>
+    <ellipse cx="148" cy="86" rx="26" ry="14"/>
+  </g>
+  <g fill="#f9b3cb">
+    <circle cx="120" cy="60" r="4"/><circle cx="86" cy="74" r="3.5"/>
+    <circle cx="50" cy="110" r="3.5"/><circle cx="154" cy="82" r="3"/>
+    <circle cx="72" cy="60" r="3"/>
+  </g>
+  <path d="M62 200 h76 l-12 20 h-52 z" fill="#f2c3d4"/>
+</svg>
+
+<main class="card">
+  <header>
+    <div class="bonsai-badge">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <g fill="none" stroke="#5e8a6c" stroke-width="2.6" stroke-linecap="round">
+          <path d="M32 50 C31 40 24 37 21 29 C18.5 22.5 24 17 31 16"/>
+          <path d="M31 38 C36 35 43 33 47 27"/>
+        </g>
+        <g fill="#a8cdb2">
+          <ellipse cx="31" cy="13.5" rx="14" ry="7"/>
+          <ellipse cx="50" cy="24" rx="9.5" ry="5"/>
+          <ellipse cx="16" cy="22" rx="8.5" ry="4.5"/>
+        </g>
+        <g fill="#f291b3">
+          <circle cx="24" cy="11" r="1.8"/><circle cx="37" cy="16" r="1.6"/>
+          <circle cx="51" cy="22" r="1.6"/><circle cx="14" cy="20" r="1.5"/>
+        </g>
+        <path d="M19 50 h26 l-4 8 h-18 z" fill="#e5a3bd"/>
+        <path d="M17 48.5 h30 v3.2 h-30 z" fill="#f2c3d4"/>
+      </svg>
+    </div>
+    <h1>Umówmy się na randkę</h1>
+  </header>
+
+  <div class="progress" id="progress">
+    <div class="p-step active" data-s="1"><div class="p-dot">1</div><div class="p-label">Termin</div></div>
+    <div class="p-line"></div>
+    <div class="p-step" data-s="2"><div class="p-dot">2</div><div class="p-label">Plan</div></div>
+    <div class="p-line"></div>
+    <div class="p-step" data-s="3"><div class="p-dot">3</div><div class="p-label">Potwierdzenie</div></div>
+  </div>
+
+  <!-- ============ KROK 1 ============ -->
+  <section class="step active" id="step1">
+    <h2>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#e56f98" stroke-width="2" stroke-linecap="round">
+        <rect x="3" y="5" width="18" height="16" rx="4"/><path d="M8 3v4M16 3v4M3 11h18"/>
+      </svg>
+      Kiedy się widzimy?
+    </h2>
+
+    <label class="field-label" for="date">Data</label>
+    <input type="date" id="date" />
+
+    <div class="divider">godzina</div>
+
+    <div class="time-grid" id="timeGrid"></div>
+
+    <label class="field-label" for="time">Własna godzina</label>
+    <input type="time" id="time" step="300" />
+
+    <div class="alert" id="err1"></div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="to2">Dalej →</button>
+    </div>
+  </section>
+
+  <!-- ============ KROK 2 ============ -->
+  <section class="step" id="step2">
+    <h2>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#e56f98" stroke-width="2" stroke-linecap="round">
+        <path d="M12 21s-7.5-4.6-9.3-9A5.3 5.3 0 0 1 12 6.6 5.3 5.3 0 0 1 21.3 12c-1.8 4.4-9.3 9-9.3 9z"/>
+      </svg>
+      Co robimy?
+    </h2>
+
+    <div class="activity" data-key="food">
+      <div class="activity-head" tabindex="0" role="checkbox" aria-checked="false">
+        <span class="emo">🍽️</span>
+        <span class="name">Jedzenie</span>
+        <span class="box"></span>
+      </div>
+      <div class="sub">
+        <div class="chips" id="foodChips">
+          <label class="chip"><input type="checkbox" value="McDonald's"><span>🍟 McDonald's</span></label>
+          <label class="chip"><input type="checkbox" value="Restauracja"><span>🍝 Restauracja</span></label>
+          <label class="chip"><input type="checkbox" value="Pizza"><span>🍕 Pizza</span></label>
+          <label class="chip"><input type="checkbox" value="KFC"><span>🍗 KFC</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="activity" data-key="sunset">
+      <div class="activity-head" tabindex="0" role="checkbox" aria-checked="false">
+        <span class="emo">🌅</span>
+        <span class="name">Zachód słońca</span>
+        <span class="box"></span>
+      </div>
+    </div>
+
+    <div class="activity" data-key="walk">
+      <div class="activity-head" tabindex="0" role="checkbox" aria-checked="false">
+        <span class="emo">🚶</span>
+        <span class="name">Spacer</span>
+        <span class="box"></span>
+      </div>
+    </div>
+
+    <div class="activity" data-key="movie">
+      <div class="activity-head" tabindex="0" role="checkbox" aria-checked="false">
+        <span class="emo">🎬</span>
+        <span class="name">Oglądanie filmu</span>
+        <span class="box"></span>
+      </div>
+      <div class="sub">
+        <input type="text" id="movieTitle" placeholder="Tytuł filmu" />
+      </div>
+    </div>
+
+    <div class="alert" id="err2"></div>
+
+    <div class="actions">
+      <button class="btn btn-ghost" data-back="1">← Wstecz</button>
+      <button class="btn btn-primary" id="to3">Dalej →</button>
+    </div>
+  </section>
+
+  <!-- ============ KROK 3 ============ -->
+  <section class="step" id="step3">
+    <h2>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#e56f98" stroke-width="2" stroke-linecap="round">
+        <path d="M5 12.5l4.5 4.5L19 7.5"/>
+      </svg>
+      Nasz plan
+    </h2>
+
+    <div class="summary" id="summary"></div>
+
+    <label class="field-label" for="note">Wiadomość (opcjonalnie)</label>
+    <textarea id="note" placeholder="Dodaj coś od siebie…"></textarea>
+
+    <div class="alert" id="err3"></div>
+
+    <div class="actions">
+      <button class="btn btn-ghost" data-back="2">← Wstecz</button>
+      <button class="btn btn-primary" id="sendBtn">Potwierdzam! 💖</button>
+    </div>
+  </section>
+
+  <!-- ============ SUKCES ============ -->
+  <section class="step" id="step4">
+    <div class="success">
+      <div class="heart">💖</div>
+      <h2>Randka umówiona!</h2>
+      <div class="recap" id="recap"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+/* ================= KONFIGURACJA ================= */
+const WEBHOOK_URL = "https://discord.com/api/webhooks/1548680372508819507/Hr0QRXxyg1KTfrNAvyK2q44U2VdCQnP0-vXXBtTG1eAeiH72EM7V3HXxdBFA1DkuFhU3";
+
+/* ================= PŁATKI ================= */
+(function petals(){
+  const cv = document.getElementById('petals');
+  const ctx = cv.getContext('2d');
+  const colors = ['#ffd2e1','#f9b3cb','#ffe6ef','#f291b3','#fff1f6'];
+  let W = 0, H = 0, items = [];
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const count = () => window.innerWidth < 600 ? 14 : 32;
+
+  function make(spawnTop){
+    return {
+      x: Math.random() * W,
+      y: spawnTop ? -20 : Math.random() * H,
+      r: 5 + Math.random() * 8,
+      sp: .35 + Math.random() * .9,
+      drift: .4 + Math.random() * 1.1,
+      ph: Math.random() * Math.PI * 2,
+      a: Math.random() * Math.PI * 2,
+      va: (Math.random() - .5) * .035,
+      op: .4 + Math.random() * .5,
+      c: colors[(Math.random() * colors.length) | 0]
+    };
+  }
+
+  function resize(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    items = Array.from({ length: count() }, () => make(false));
+  }
+
+  function petal(p){
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.a);
+    ctx.globalAlpha = p.op;
+    ctx.fillStyle = p.c;
+    ctx.beginPath();
+    ctx.moveTo(0, -p.r);
+    ctx.bezierCurveTo(p.r * .95, -p.r * .55, p.r * .75, p.r * .7, 0, p.r);
+    ctx.bezierCurveTo(-p.r * .75, p.r * .7, -p.r * .95, -p.r * .55, 0, -p.r);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function loop(){
+    ctx.clearRect(0, 0, W, H);
+    for (const p of items){
+      p.y += p.sp;
+      p.ph += .012;
+      p.x += Math.sin(p.ph) * p.drift;
+      p.a += p.va;
+      if (p.y - p.r > H || p.x < -60 || p.x > W + 60) Object.assign(p, make(true));
+      petal(p);
+    }
+    requestAnimationFrame(loop);
+  }
+
+  let t;
+  window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(resize, 150); });
+  resize();
+  if (!reduce) requestAnimationFrame(loop);
+  else items.forEach(petal);
+})();
+
+/* ================= KONFETTI ================= */
+function confetti(duration = 4200){
+  const cv = document.getElementById('confetti');
+  const ctx = cv.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const W = window.innerWidth, H = window.innerHeight;
+  cv.width = W * dpr; cv.height = H * dpr;
+  cv.style.width = W + 'px'; cv.style.height = H + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const colors = ['#f291b3','#e56f98','#ffd2e1','#a8cdb2','#fff1f6','#c9537d'];
+  const parts = [];
+  const N = W < 600 ? 70 : 140;
+
+  for (let i = 0; i < N; i++){
+    parts.push({
+      x: W / 2 + (Math.random() - .5) * W * .6,
+      y: H * .35 + (Math.random() - .5) * 80,
+      vx: (Math.random() - .5) * 9,
+      vy: -6 - Math.random() * 9,
+      g: .18 + Math.random() * .12,
+      s: 5 + Math.random() * 7,
+      a: Math.random() * Math.PI * 2,
+      va: (Math.random() - .5) * .3,
+      c: colors[(Math.random() * colors.length) | 0],
+      heart: Math.random() < .35
+    });
+  }
+
+  const start = performance.now();
+  (function frame(now){
+    const t = now - start;
+    ctx.clearRect(0, 0, W, H);
+    for (const p of parts){
+      p.vy += p.g;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vx *= .995;
+      p.a += p.va;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.a);
+      ctx.globalAlpha = Math.max(0, 1 - t / duration);
+      ctx.fillStyle = p.c;
+      if (p.heart){
+        const s = p.s / 10;
+        ctx.beginPath();
+        ctx.moveTo(0, 3 * s);
+        ctx.bezierCurveTo(6 * s, -3 * s, 3 * s, -9 * s, 0, -5 * s);
+        ctx.bezierCurveTo(-3 * s, -9 * s, -6 * s, -3 * s, 0, 3 * s);
+        ctx.fill();
+      } else {
+        ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2);
+      }
+      ctx.restore();
+    }
+    if (t < duration) requestAnimationFrame(frame);
+    else ctx.clearRect(0, 0, W, H);
+  })(start);
+}
+
+/* ================= STAN ================= */
+const state = { date:'', time:'', activities:[], food:[], movie:'', note:'' };
+
+const dateInput = document.getElementById('date');
+const timeInput = document.getElementById('time');
+const timeGrid  = document.getElementById('timeGrid');
+
+/* kalendarz: tylko bieżący rok, od dzisiaj do 31 grudnia */
+const now = new Date();
+const pad = n => String(n).padStart(2, '0');
+const YEAR = now.getFullYear();
+dateInput.min = YEAR + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate());
+dateInput.max = YEAR + '-12-31';
+
+/* propozycje godzin */
+['12:00','14:00','16:00','17:30','18:00','19:00','20:00','21:00'].forEach(h => {
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'time-chip';
+  b.textContent = h;
+  b.addEventListener('click', () => { timeInput.value = h; markTime(h); hide('err1'); });
+  timeGrid.appendChild(b);
+});
+
+function markTime(v){
+  [...timeGrid.children].forEach(c => c.classList.toggle('selected', c.textContent === v));
+}
+timeInput.addEventListener('input', () => { markTime(timeInput.value); hide('err1'); });
+
+/* blokada roku również przy ręcznym wpisaniu daty */
+dateInput.addEventListener('change', () => {
+  hide('err1');
+  if (!dateInput.value) return;
+  const y = +dateInput.value.slice(0, 4);
+  if (y !== YEAR || dateInput.value < dateInput.min){
+    dateInput.value = '';
+    showErr('err1', 'Wybierz datę z ' + YEAR + ' roku, od dzisiaj do 31 grudnia.');
+  }
+});
+
+function goto(n){
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+  const cur = Math.min(n, 3);
+  document.querySelectorAll('.p-step').forEach(p => {
+    const i = +p.dataset.s;
+    p.classList.toggle('active', i === cur);
+    p.classList.toggle('done', i < cur);
+  });
+  document.getElementById('progress').style.display = n === 4 ? 'none' : 'flex';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showErr(id, msg){
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.classList.add('show');
+}
+function hide(id){ document.getElementById(id).classList.remove('show'); }
+
+document.querySelectorAll('[data-back]').forEach(b =>
+  b.addEventListener('click', () => goto(+b.dataset.back))
+);
+
+/* ================= KROK 1 -> 2 ================= */
+document.getElementById('to2').addEventListener('click', () => {
+  if (!dateInput.value) return showErr('err1', 'Wybierz datę 🌸');
+  if (!timeInput.value) return showErr('err1', 'Wybierz godzinę ⏰');
+  state.date = dateInput.value;
+  state.time = timeInput.value;
+  hide('err1');
+  goto(2);
+});
+
+/* ================= KROK 2 ================= */
+document.querySelectorAll('.activity').forEach(act => {
+  const head = act.querySelector('.activity-head');
+  const sub  = act.querySelector('.sub');
+  const key  = act.dataset.key;
+
+  const toggle = () => {
+    const on = !act.classList.contains('checked');
+    act.classList.toggle('checked', on);
+    head.setAttribute('aria-checked', String(on));
+    if (sub) sub.classList.toggle('open', on);
+    if (on && key === 'movie') setTimeout(() => document.getElementById('movieTitle').focus(), 180);
+    hide('err2');
+  };
+
+  head.addEventListener('click', toggle);
+  head.addEventListener('keydown', e => {
+    if (e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); toggle(); }
+  });
+});
+
+document.querySelectorAll('#foodChips .chip').forEach(chip => {
+  const input = chip.querySelector('input');
+  chip.addEventListener('click', e => {
+    e.preventDefault();
+    input.checked = !input.checked;
+    chip.classList.toggle('on', input.checked);
+    hide('err2');
+  });
+});
+
+document.getElementById('to3').addEventListener('click', () => {
+  const chosen = [...document.querySelectorAll('.activity.checked')].map(a => a.dataset.key);
+  if (!chosen.length) return showErr('err2', 'Zaznacz przynajmniej jedną aktywność 💗');
+
+  if (chosen.includes('food')){
+    state.food = [...document.querySelectorAll('#foodChips input:checked')].map(i => i.value);
+    if (!state.food.length) return showErr('err2', 'Wybierz, gdzie zjemy 🍽️');
+  } else state.food = [];
+
+  if (chosen.includes('movie')){
+    state.movie = document.getElementById('movieTitle').value.trim();
+    if (!state.movie) return showErr('err2', 'Wpisz tytuł filmu 🎬');
+  } else state.movie = '';
+
+  state.activities = chosen;
+  hide('err2');
+  renderSummary();
+  goto(3);
+});
+
+/* ================= KROK 3 ================= */
+const LABELS = {
+  food:   { ico:'🍽️', name:'Jedzenie' },
+  sunset: { ico:'🌅', name:'Zachód słońca' },
+  walk:   { ico:'🚶', name:'Spacer' },
+  movie:  { ico:'🎬', name:'Oglądanie filmu' }
+};
+
+function prettyDate(iso){
+  try{
+    const d = new Date(iso + 'T00:00:00');
+    const s = d.toLocaleDateString('pl-PL', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }catch(e){ return iso; }
+}
+
+function esc(s){ return String(s).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])); }
+
+function activityLines(){
+  return state.activities.map(k => {
+    let line = LABELS[k].ico + ' ' + LABELS[k].name;
+    if (k === 'food' && state.food.length) line += ' — ' + state.food.join(', ');
+    if (k === 'movie' && state.movie)      line += ' — „' + state.movie + '”';
+    return line;
+  });
+}
+
+function renderSummary(){
+  const row = (ico, k, v) =>
+    '<div class="sum-row"><span class="ico">' + ico + '</span><span><span class="k">' + k +
+    '</span><div class="v">' + v + '</div></span></div>';
+
+  const tags = state.activities
+    .map(k => '<span class="tag">' + LABELS[k].ico + ' ' + LABELS[k].name + '</span>').join('');
+
+  let html = row('📅', 'Data', prettyDate(state.date)) + row('⏰', 'Godzina', state.time) + row('💞', 'Plan', tags);
+  if (state.food.length) html += row('🍴', 'Jedzenie', esc(state.food.join(' · ')));
+  if (state.movie)       html += row('🎬', 'Film', '„' + esc(state.movie) + '”');
+  document.getElementById('summary').innerHTML = html;
+}
+
+/* ================= WYSYŁKA ================= */
+const sendBtn = document.getElementById('sendBtn');
+
+sendBtn.addEventListener('click', async () => {
+  state.note = document.getElementById('note').value.trim();
+  hide('err3');
+  sendBtn.disabled = true;
+  const original = sendBtn.textContent;
+  sendBtn.textContent = 'Wysyłam… 💌';
+
+  const fields = [
+    { name: '📅 Data',       value: prettyDate(state.date) + ' (' + state.date + ')', inline: true },
+    { name: '⏰ Godzina',    value: state.time, inline: true },
+    { name: '💞 Aktywności', value: activityLines().map(l => '• ' + l).join('\n'), inline: false }
+  ];
+  if (state.food.length) fields.push({ name: '🍴 Jedzenie', value: state.food.join(', '), inline: true });
+  if (state.movie)       fields.push({ name: '🎬 Film',     value: state.movie, inline: true });
+  if (state.note)        fields.push({ name: '💌 Wiadomość', value: state.note, inline: false });
+
+  const payload = {
+    username: 'Zaproszenie na randkę 🌸',
+    embeds: [{
+      title: '💖 Nowa randka została umówiona!',
+      color: 0xF291B3,
+      fields: fields,
+      timestamp: new Date().toISOString()
+    }]
+  };
+
+  try{
+    const res = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+
+    document.getElementById('recap').innerHTML =
+      '<strong>' + prettyDate(state.date) + '</strong>, godz. <strong>' + state.time + '</strong><br>' +
+      activityLines().map(esc).join('<br>') +
+      (state.note ? '<br><em>„' + esc(state.note) + '”</em>' : '');
+
+    goto(4);
+    confetti();
+  }catch(err){
+    sendBtn.disabled = false;
+    sendBtn.textContent = original;
+    showErr('err3', 'Nie udało się wysłać 😢 Sprawdź internet i spróbuj ponownie.');
+  }
+});
+</script>
+</body>
+</html>
